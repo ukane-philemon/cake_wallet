@@ -54,6 +54,8 @@ abstract class WalletNewVMBase extends WalletCreationVM with Store {
       case WalletType.ethereum:
       case WalletType.bitcoinCash:
         return advancedPrivacySettingsViewModel.seedPhraseLength.value;
+      case WalletType.decred:
+        return 15;
       default:
         return 24;
     }
