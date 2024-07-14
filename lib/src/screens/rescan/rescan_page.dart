@@ -25,7 +25,8 @@ class RescanPage extends BasePage {
   @override
   Widget body(BuildContext context) {
     if (type == WalletType.decred) {
-      return Padding(
+      return Center(
+          child: Padding(
         padding: EdgeInsets.only(left: 24, right: 24, bottom: 24),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -45,7 +46,7 @@ class RescanPage extends BasePage {
                         textColor: Colors.white,
                       ))
             ]),
-      );
+      ));
     }
     return Padding(
       padding: EdgeInsets.only(left: 24, right: 24, bottom: 24),
