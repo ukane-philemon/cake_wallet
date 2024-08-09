@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -337,7 +336,7 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
         return defaultFeeRate;
       }
     };
-    final p = priority as DecredTransactionPriority;
+    final p = priority;
     switch (p) {
       case DecredTransactionPriority.slow:
         if (feeRateSlow.isOld()) {
@@ -388,7 +387,6 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
     return this.fetchFiveTransactions(0);
   }
 
-  @override
   Future<Map<String, DecredTransactionInfo>> fetchFiveTransactions(
       int from) async {
     final res =
@@ -417,8 +415,9 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
         height: 0,
         confirmations: confs,
         to: d["address"] ?? "",
+        vout: d["vout"] ?? 0,
       );
-      txs[txid] = txInfo;
+      txs[txMapKey(txInfo)] = txInfo;
     }
     return txs;
   }

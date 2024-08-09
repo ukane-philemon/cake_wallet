@@ -11,11 +11,13 @@ class DecredTransactionHistory extends TransactionHistoryBase<TransactionInfo> {
 
   @override
   void addOne(TransactionInfo transaction) =>
-      transactions[transaction.id] = transaction;
+      transactions[txMapKey(transaction)] = transaction;
 
   @override
   void addMany(Map<String, TransactionInfo> transactions) =>
-      this.transactions.addAll(transactions);
+      transactions.forEach((_, tx) {
+       this.transactions[txMapKey(tx)] = tx;
+      });
 
   @override
   Future<void> save() async {}
@@ -25,14 +27,21 @@ class DecredTransactionHistory extends TransactionHistoryBase<TransactionInfo> {
   // update returns true if a known transaction that is not pending was found.
   bool update(Map<String, TransactionInfo> txs) {
     var foundOldTx = false;
-    txs.forEach((_, tx) {
-      if (!this.transactions.containsKey(tx.id) ||
-          this.transactions[tx.id]!.isPending) {
-        this.transactions[tx.id] = tx;
+    txs.forEach((id, tx) {
+      if (!this.transactions.containsKey(id) ||
+          this.transactions[id]!.isPending) {
+        this.transactions[id] = tx;
       } else {
         foundOldTx = true;
       }
     });
     return foundOldTx;
   }
+}
+
+// txMapKey uses the tx id and vout to create a unique value for map keys. This
+// is because outputs in the same tx will have the same tx id and overwrite
+// other outputs when stored in a map where the key is the tx id.
+String txMapKey(TransactionInfo tx) {
+  return tx.id + ":" + tx.vout.toString();
 }
